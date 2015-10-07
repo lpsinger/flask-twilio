@@ -1,3 +1,5 @@
+__all__ = ('Response', 'Twilio')
+
 from base64 import urlsafe_b64encode
 from functools import wraps
 from os import urandom
@@ -20,6 +22,12 @@ except ImportError:
 
 
 class Response(FlaskResponse, TwimlResponse):
+    """
+    A response class for constructing TwiML documents, providing all of
+    the verbs that are available through `twilio.twiml.Response`.
+    See https://www.twilio.com/docs/api/twiml.
+    """
+
     def __init__(self, *args, **kwargs):
         TwimlResponse.__init__(self)
         FlaskResponse.__init__(self, *args, **kwargs)
@@ -59,6 +67,10 @@ class Twilio(object):
 
     @property
     def client(self):
+        """
+        An application-specific intance of `twilio.rest.TwilioRestClient`.
+        Primarily for internal use.
+        """
         ctx = stack.top
         if ctx is not None:
             if not hasattr(ctx, 'twilio_client'):
@@ -69,6 +81,10 @@ class Twilio(object):
 
     @property
     def validator(self):
+        """
+        An application-specific instance of `twilio.util.RequestValidator`.
+        Primarily for internal use.
+        """
         ctx = stack.top
         if ctx is not None:
             if not hasattr(ctx, 'twilio_validator'):
@@ -78,6 +94,10 @@ class Twilio(object):
 
     @property
     def signer(self):
+        """
+        An application-specific instance of `itsdangerous.TimestampSigner`.
+        Primarily for internal use.
+        """
         ctx = stack.top
         if ctx is not None:
             if not hasattr(ctx, 'twilio_signer'):
@@ -88,39 +108,103 @@ class Twilio(object):
     def twiml(self, view_func):
         @wraps(view_func)
         def wrapper(*args, **kwargs):
+            # If we are not in testing mode, then enforce rudimentary security.
             if not current_app.testing:
+                # Perform HTTP Basic authentication.
+                # The username must be `twilio`, and the password must be a
+                # validly signed string that was generated less than 10 minutes
+                # ago. This guarantees that the Twilio call was initiated by
+                # this application, rather than a malicious agent.
+                #
+                # Note that if we are using HTTP, then a malicious agent can
+                # still snoop on the data that we are sending to and from
+                # Twilio, and can also spoof our reply to Twilio. Both issues
+                # would be addressed by using HTTPS.
                 auth = request.authorization
                 authorized = (
                     auth and
                     auth.username == 'twilio' and
                     self.signer.validate(auth.password, max_age=600))
                 if not authorized:
+                    # If authorization failed, then issue a challenge.
                     return 'Unauthorized', 401, {'WWW-Authenticate': 'Basic realm="Login Required"'}
+                # Validate the Twilio request. This guarantees that the request
+                # came from Twilio, rather than some other malicious agent.
                 valid = self.validator.validate(
                     request.url,
                     request.form,
                     request.headers.get('X-Twilio-Signature', ''))
                 if not valid:
+                    # If the request was spoofed, then send '403 Forbidden'.
                     abort(403)
+            # Call the view itself.
             rv = view_func(*args, **kwargs)
+            # Adjust MIME type and return.
             resp = make_response(rv)
             resp.mimetype = 'text/xml'
             return resp
-        wrapper.methods = ('GET', 'POST',)
+        # Only accept the POST method.
+        wrapper.methods = ('POST',)
+        # Done!
         return wrapper
 
     def call_for(self, endpoint, to, **values):
+        """
+        Initiate a Twilio call.
+
+        Parameters
+        ----------
+        endpoint : `str`
+            The view endpoint, as would be passed to `flask.url_for`.
+        to : `str`
+            The destination phone number.
+        **values :
+            Additional keyword arguments to pass to `flask.url_for`.
+
+        Returns
+        -------
+        call : `twilio.resources.Call`
+            An object representing the call in progress.
+        """
+        # Extract keyword arguments that are intended for `calls.create`
+        # instead of `url_for`.
         values = dict(values, _external=True)
         from_ = values.pop('from_', None) or current_app.config['TWILIO_FROM']
+
+        # Construct URL for endpoint.
         url = url_for(endpoint, **values)
+
+        # If we are not in testing mode, then add HTTP basic auth information
+        # to the URL. The username is `twilio`. The password is a random string
+        # that has been signed with `itsdangerous`.
         if not current_app.testing:
             urlparts = list(urlsplit(url))
             password = self.signer.sign(urlsafe_b64encode(urandom(24)))
             urlparts[1] = 'twilio:' + password + '@' + urlparts[1]
             url = urlunsplit(urlparts)
+
+        # Issue phone call.
         return self.client.calls.create(to, from_, url)
 
     def message(self, body, to, **values):
+        """
+        Send an SMS message with Twilio.
+
+        Parameters
+        ----------
+        body : `str`
+            The body of the text message.
+        to : `str`
+            The destination phone number.
+        **values :
+            Additional keyword arguments to pass to
+            `twilio.resources.Messages.create`.
+
+        Returns
+        -------
+        message : `twilio.resources.Message`
+            An object representing the message that was sent.
+        """
         values = dict(values)
         from_ = values.pop('from_', None) or current_app.config['TWILIO_FROM']
         return self.client.messages.create(body=body, to=to, from_=from_, **values)

@@ -1,12 +1,20 @@
 #!/usr/bin/env python
+"""
+Demo Flask-Twilio application
+"""
+
+# Imports.
 import os
 from flask import flash, Flask, render_template, request, url_for
 from flask.ext.twilio import Twilio, Response
 from twilio.rest.exceptions import TwilioRestException
 from jinja2 import DictLoader
 
+# A standard test number.
+# See https://www.twilio.com/docs/api/rest/test-credentials.
 DEFAULT_NUMBER = '+15005550006'
 
+# Application configuration.
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.urandom(24)
 app.config['TWILIO_ACCOUNT_SID'] = os.environ['TWILIO_ACCOUNT_SID']
@@ -14,6 +22,7 @@ app.config['TWILIO_AUTH_TOKEN'] = os.environ['TWILIO_AUTH_TOKEN']
 app.config['TWILIO_FROM'] = os.environ.get('TWILIO_FROM', DEFAULT_NUMBER)
 twilio = Twilio(app)
 
+# Main form template.
 app.jinja_loader = DictLoader({'example.html': '''\
 <!doctype html>
 <title>Flask-Twilio Test</title>
@@ -57,6 +66,7 @@ app.jinja_loader = DictLoader({'example.html': '''\
 @app.route('/twiml')
 @twilio.twiml
 def test_call():
+    """View for producing the TwiML document."""
     say = int(request.values.get('say', 1))
     sms = int(request.values.get('sms', 1))
     resp = Response()
@@ -66,12 +76,14 @@ def test_call():
 
 @app.route('/', methods=['GET'])
 def index_get():
+    """Main form view."""
     return render_template(
         'example.html',
         to=request.values.get('to', DEFAULT_NUMBER))
 
 @app.route('/', methods=['POST'])
 def index_post():
+    """Main form action."""
     try:
         say = int(request.values.get('say', 1))
         sms = int(request.values.get('sms', 1))
@@ -85,4 +97,5 @@ def index_post():
         flash('Failed to make call: ' + e.msg, 'danger')
     return index_get()
 
+# Start application.
 app.run('0.0.0.0')
