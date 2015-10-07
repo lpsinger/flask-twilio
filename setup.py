@@ -24,6 +24,7 @@ setup(
     install_requires=[
         'itsdangerous',
         'Flask',
+        'six',
         'twilio'
     ],
     setup_requires=[
