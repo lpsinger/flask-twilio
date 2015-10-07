@@ -5,11 +5,12 @@ Flask-Twilio
 Make Twilio voice/SMS calls with Flask
 """
 from setuptools import setup
+exec(open('flask_twilio.py').next())
 
 
 setup(
     name='Flask-Twilio',
-    version='0.0.1',
+    version=__version__,
     url='http://example.com/flask-twilio/',
     license='BSD',
     author='Leo Singer',
