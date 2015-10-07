@@ -42,6 +42,7 @@ class Response(FlaskResponse, TwimlResponse):
 
 
 class Twilio(object):
+    """This class is used to control Twilio calls."""
 
     def __init__(self, app=None):
         self.app = app
@@ -111,6 +112,7 @@ class Twilio(object):
             return ctx.twilio_signer
 
     def twiml(self, view_func):
+        """Decorator for marking view that will create TwiML documents."""
         @wraps(view_func)
         def wrapper(*args, **kwargs):
             # If we are not in testing mode, then enforce rudimentary security.

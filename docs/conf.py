@@ -119,6 +119,10 @@ napoleon_use_ivar = False
 napoleon_use_param = True
 napoleon_use_rtype = True
 
+# -- Options for Autodoc extension ----------------------------------------
+
+autodoc_default_flags = ['members']
+
 # -- Options for HTML output ----------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
