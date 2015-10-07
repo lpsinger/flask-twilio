@@ -90,13 +90,12 @@ class Twilio(object):
         def wrapper(*args, **kwargs):
             if not current_app.testing:
                 auth = request.authorization
-                if not auth:
-                    return 'Unauthorized', 401, {'WWW-Authenticate': 'Basic realm="Login Required"'}
                 authorized = (
+                    auth and
                     auth.username == 'twilio' and
                     self.signer.validate(auth.password, max_age=600))
                 if not authorized:
-                    abort(401)
+                    return 'Unauthorized', 401, {'WWW-Authenticate': 'Basic realm="Login Required"'}
                 valid = self.validator.validate(
                     request.url,
                     request.form,
