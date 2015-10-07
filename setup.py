@@ -21,6 +21,7 @@ setup(
     include_package_data=True,
     platforms='any',
     install_requires=[
+        'itsdangerous',
         'Flask',
         'twilio'
     ],
