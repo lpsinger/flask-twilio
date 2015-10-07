@@ -105,7 +105,7 @@ class Twilio(object):
         ctx = stack.top
         if ctx is not None:
             if not hasattr(ctx, 'twilio_signer'):
-                if app.secret_key is not None:
+                if current_app.secret_key is not None:
                     ctx.twilio_signer = TimestampSigner(
                         current_app.secret_key, 'twilio')
                 else:
