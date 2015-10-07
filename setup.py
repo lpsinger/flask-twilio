@@ -11,7 +11,7 @@ exec(open('flask_twilio.py').readline())
 setup(
     name='Flask-Twilio',
     version=__version__,
-    url='http://example.com/flask-twilio/',
+    url='https://github.com/lpsinger/flask-twilio',
     license='BSD',
     author='Leo Singer',
     author_email='leo.singer@ligo.org',
