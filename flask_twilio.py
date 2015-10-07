@@ -103,7 +103,7 @@ class Twilio(object):
         if ctx is not None:
             if not hasattr(ctx, 'twilio_signer'):
                 ctx.twilio_signer = TimestampSigner(
-                    current_app.config['SECRET_KEY'], 'twilio')
+                    current_app.secret_key, 'twilio')
             return ctx.twilio_signer
 
     def twiml(self, view_func):
