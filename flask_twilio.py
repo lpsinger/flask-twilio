@@ -97,13 +97,17 @@ class Twilio(object):
     def signer(self):
         """
         An application-specific instance of
-        :py:class:`itsdangerous.TimestampSigner`. Primarily for internal use.
+        :py:class:`itsdangerous.TimestampSigner`, or ``None`` if no secret key
+        is set. Primarily for internal use.
         """
         ctx = stack.top
         if ctx is not None:
             if not hasattr(ctx, 'twilio_signer'):
-                ctx.twilio_signer = TimestampSigner(
-                    current_app.secret_key, 'twilio')
+                if app.secret_key is not None:
+                    ctx.twilio_signer = TimestampSigner(
+                        current_app.secret_key, 'twilio')
+                else:
+                    ctx.twilio_signer = None
             return ctx.twilio_signer
 
     def twiml(self, view_func):
@@ -111,7 +115,8 @@ class Twilio(object):
         def wrapper(*args, **kwargs):
             # If we are not in testing mode, then enforce rudimentary security.
             if not current_app.testing:
-                # Perform HTTP Basic authentication.
+                # Perform HTTP Basic authentication if a secret key is set.
+                #
                 # The username must be `twilio`, and the password must be a
                 # validly signed string that was generated less than 10 minutes
                 # ago. This guarantees that the Twilio call was initiated by
@@ -121,15 +126,16 @@ class Twilio(object):
                 # still snoop on the data that we are sending to and from
                 # Twilio, and can also spoof our reply to Twilio. Both issues
                 # would be addressed by using HTTPS.
-                auth = request.authorization
-                authorized = (
-                    auth and
-                    auth.username == 'twilio' and
-                    self.signer.validate(auth.password, max_age=600))
-                if not authorized:
-                    # If authorization failed, then issue a challenge.
-                    return 'Unauthorized', 401, {'WWW-Authenticate':
-                        'Basic realm="Login Required"'}
+                if self.signer is not None:
+                    auth = request.authorization
+                    authorized = (
+                        auth and
+                        auth.username == 'twilio' and
+                        self.signer.validate(auth.password, max_age=600))
+                    if not authorized:
+                        # If authorization failed, then issue a challenge.
+                        return 'Unauthorized', 401, {'WWW-Authenticate':
+                            'Basic realm="Login Required"'}
                 # Validate the Twilio request. This guarantees that the request
                 # came from Twilio, rather than some other malicious agent.
                 valid = self.validator.validate(
@@ -176,10 +182,10 @@ class Twilio(object):
         # Construct URL for endpoint.
         url = url_for(endpoint, **values)
 
-        # If we are not in testing mode, then add HTTP basic auth information
-        # to the URL. The username is `twilio`. The password is a random string
-        # that has been signed with `itsdangerous`.
-        if not current_app.testing:
+        # If we are not in testing mode and a secret key is set, then add HTTP
+        # basic auth information to the URL. The username is `twilio`. The
+        # password is a random string that has been signed with `itsdangerous`.
+        if not current_app.testing and self.signer is not None:
             urlparts = list(urlsplit(url))
             password = self.signer.sign(urlsafe_b64encode(urandom(24)))
             urlparts[1] = 'twilio:' + password + '@' + urlparts[1]
