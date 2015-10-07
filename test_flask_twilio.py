@@ -1,4 +1,4 @@
-from urlparse import urlsplit
+from six.moves.urllib.parse import urlsplit
 from base64 import b64encode
 import pytest
 from flask import Flask
