@@ -26,9 +26,9 @@ app.jinja_loader = DictLoader({'example.html': '''\
     <div class=jumbotron>
         <h2>Flask-Twilio Test</h2>
     </div>
-    {% with messages = get_flashed_messages() %}
-        {% for message in messages %}
-            <div class="alert alert-danger">{{ message }}</div>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">{{ message }}</div>
         {% endfor %}
     {% endwith %}
     <form method=post>
@@ -80,8 +80,9 @@ def index_post():
             twilio.call_for('test_call', to, say=say, sms=sms)
         else:
             twilio.message('This is an SMS message from Twilio!', to)
+        flash('Request was successfully sent to Twilio.', 'success')
     except TwilioRestException as e:
-        flash('Failed to make call: ' + e.msg)
+        flash('Failed to make call: ' + e.msg, 'danger')
     return index_get()
 
 app.run('0.0.0.0')
