@@ -24,8 +24,8 @@ except ImportError:
 class Response(FlaskResponse, TwimlResponse):
     """
     A response class for constructing TwiML documents, providing all of
-    the verbs that are available through `twilio.twiml.Response`.
-    See https://www.twilio.com/docs/api/twiml.
+    the verbs that are available through :py:class:`twilio.twiml.Response`.
+    See also https://www.twilio.com/docs/api/twiml.
     """
 
     def __init__(self, *args, **kwargs):
@@ -49,6 +49,7 @@ class Twilio(object):
             self.init_app(app)
 
     def init_app(self, app):
+        """Factory method."""
         # Use the newstyle teardown_appcontext if it's available,
         # otherwise fall back to the request context
         if hasattr(app, 'teardown_appcontext'):
@@ -68,7 +69,7 @@ class Twilio(object):
     @property
     def client(self):
         """
-        An application-specific intance of `twilio.rest.TwilioRestClient`.
+        An application-specific intance of :py:class:`twilio.rest.TwilioRestClient`.
         Primarily for internal use.
         """
         ctx = stack.top
@@ -82,7 +83,7 @@ class Twilio(object):
     @property
     def validator(self):
         """
-        An application-specific instance of `twilio.util.RequestValidator`.
+        An application-specific instance of :py:class:`twilio.util.RequestValidator`.
         Primarily for internal use.
         """
         ctx = stack.top
@@ -95,7 +96,7 @@ class Twilio(object):
     @property
     def signer(self):
         """
-        An application-specific instance of `itsdangerous.TimestampSigner`.
+        An application-specific instance of :py:class:`itsdangerous.TimestampSigner`.
         Primarily for internal use.
         """
         ctx = stack.top
@@ -155,15 +156,15 @@ class Twilio(object):
         Parameters
         ----------
         endpoint : `str`
-            The view endpoint, as would be passed to `flask.url_for`.
+            The view endpoint, as would be passed to :py:func:`flask.url_for`.
         to : `str`
             The destination phone number.
-        **values :
-            Additional keyword arguments to pass to `flask.url_for`.
+        values : `dict`
+            Additional keyword arguments to pass to :py:func:`flask.url_for`.
 
         Returns
         -------
-        call : `twilio.resources.Call`
+        call : `twilio.rest.resources.Call`
             An object representing the call in progress.
         """
         # Extract keyword arguments that are intended for `calls.create`
@@ -196,13 +197,13 @@ class Twilio(object):
             The body of the text message.
         to : `str`
             The destination phone number.
-        **values :
+        values : `dict`
             Additional keyword arguments to pass to
-            `twilio.resources.Messages.create`.
+            :py:meth:`twilio.rest.resources.SmsMessages.create`.
 
         Returns
         -------
-        message : `twilio.resources.Message`
+        message : :py:class:`twilio.rest.resources.SmsMessage`
             An object representing the message that was sent.
         """
         values = dict(values)
