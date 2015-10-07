@@ -26,6 +26,12 @@ setup(
         'Flask',
         'twilio'
     ],
+    setup_requires=[
+        'pytest-runner',
+    ],
+    tests_require=[
+        'pytest',
+    ],
     classifiers=[
         'Environment :: Web Environment',
         'Intended Audience :: Developers',
