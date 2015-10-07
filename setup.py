@@ -9,7 +9,7 @@ from setuptools import setup
 
 setup(
     name='Flask-Twilio',
-    version='1.0',
+    version='0.0.1',
     url='http://example.com/flask-twilio/',
     license='BSD',
     author='Leo Singer',
