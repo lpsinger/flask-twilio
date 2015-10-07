@@ -84,4 +84,4 @@ def index_post():
         flash('Failed to make call: ' + e.msg)
     return index_get()
 
-app.run()
+app.run('0.0.0.0')
