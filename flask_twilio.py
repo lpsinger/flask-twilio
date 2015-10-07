@@ -118,4 +118,9 @@ class Twilio(object):
             password = self.signer.sign(urlsafe_b64encode(urandom(24)))
             urlparts[1] = 'twilio:' + password + '@' + urlparts[1]
             url = urlunsplit(urlparts)
-        return self.client.calls.create(to=to, from_=from_, url=url)
+        return self.client.calls.create(to, from_, url)
+
+    def message(self, body, to, **values):
+        values = dict(values)
+        from_ = values.pop('from_', None) or current_app.config['TWILIO_FROM']
+        return self.client.messages.create(body=body, to=to, from_=from_, **values)
