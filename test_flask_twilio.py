@@ -8,7 +8,7 @@ from flask.ext.twilio import Twilio, Response
 
 
 def basic_auth(username, password):
-    return {'Authorization': 'Basic ' + b64encode(username + ':' + password)}
+    return {'Authorization': 'Basic ' + b64encode(str.encode(username + ':' + password)).decode()}
 
 
 @pytest.fixture

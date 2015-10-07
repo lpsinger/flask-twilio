@@ -190,7 +190,7 @@ class Twilio(object):
         # password is a random string that has been signed with `itsdangerous`.
         if not current_app.testing and self.signer is not None:
             urlparts = list(urlsplit(url))
-            password = self.signer.sign(urlsafe_b64encode(urandom(24)))
+            password = self.signer.sign(urlsafe_b64encode(urandom(24))).decode()
             urlparts[1] = 'twilio:' + password + '@' + urlparts[1]
             url = urlunsplit(urlparts)
 
