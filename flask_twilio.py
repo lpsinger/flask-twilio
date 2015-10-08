@@ -1,7 +1,8 @@
 __version__ = '0.0.1'
 __all__ = ('Response', 'Twilio')
 
-from base64 import urlsafe_b64encode
+from string import ascii_letters, digits
+from random import SystemRandom
 from functools import wraps
 from os import urandom
 from six.moves.urllib.parse import urlsplit, urlunsplit
@@ -20,6 +21,10 @@ try:
     from flask import _app_ctx_stack as stack
 except ImportError:
     from flask import _request_ctx_stack as stack
+
+
+rand = SystemRandom()
+letters_and_digits = ascii_letters + digits
 
 
 class Response(FlaskResponse, TwimlResponse):
@@ -190,7 +195,8 @@ class Twilio(object):
         # password is a random string that has been signed with `itsdangerous`.
         if not current_app.testing and self.signer is not None:
             urlparts = list(urlsplit(url))
-            password = self.signer.sign(urlsafe_b64encode(urandom(24))).decode()
+            token = ''.join(rand.choice(letters_and_digits) for i in range(32))
+            password = self.signer.sign(token).decode()
             urlparts[1] = 'twilio:' + password + '@' + urlparts[1]
             url = urlunsplit(urlparts)
 
