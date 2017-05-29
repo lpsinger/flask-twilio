@@ -2,9 +2,10 @@ from six.moves.urllib.parse import urlsplit
 from base64 import b64encode
 import pytest
 from flask import Flask
-from twilio.util import RequestValidator
-from twilio.rest.resources import Calls
+from twilio.request_validator import RequestValidator
+from twilio.rest.api.v2010.account.call import CallList
 from flask.ext.twilio import Twilio, Response
+from twilio.twiml.voice_response import Say
 
 
 def basic_auth(username, password):
@@ -23,7 +24,7 @@ def twilio():
     @twilio.twiml
     def call():
         resp = Response()
-        resp.say('Testing, 1, 2, 3.')
+        resp.append(Say('Testing, 1, 2, 3.'))
         return resp
 
     return twilio
@@ -48,7 +49,7 @@ def mock_create_call(monkeypatch):
         ret['to'] = to
         ret['from_'] = from_
         ret['url'] = url
-    monkeypatch.setattr(Calls, 'create', store)
+    monkeypatch.setattr(CallList, 'create', store)
     return ret
 
 

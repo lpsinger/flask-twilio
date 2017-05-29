@@ -6,9 +6,9 @@ from random import SystemRandom
 from functools import wraps
 from os import urandom
 from six.moves.urllib.parse import urlsplit, urlunsplit
-from twilio.rest import TwilioRestClient
-from twilio.util import RequestValidator
-from twilio.twiml import Response as TwimlResponse
+from twilio.rest import Client
+from twilio.request_validator import RequestValidator
+from twilio.twiml import TwiML
 from flask import Response as FlaskResponse
 from flask import abort, current_app, make_response, request, url_for
 from itsdangerous import TimestampSigner
@@ -27,7 +27,7 @@ rand = SystemRandom()
 letters_and_digits = ascii_letters + digits
 
 
-class Response(FlaskResponse, TwimlResponse):
+class Response(FlaskResponse, TwiML):
     """
     A response class for constructing TwiML documents, providing all of
     the verbs that are available through :py:class:`twilio.twiml.Response`.
@@ -35,12 +35,12 @@ class Response(FlaskResponse, TwimlResponse):
     """
 
     def __init__(self, *args, **kwargs):
-        TwimlResponse.__init__(self)
+        TwiML.__init__(self)
         FlaskResponse.__init__(self, *args, **kwargs)
 
     @property
     def response(self):
-        return [self.toxml()]
+        return [self.to_xml()]
 
     @response.setter
     def response(self, value):
@@ -77,12 +77,12 @@ class Twilio(object):
     def client(self):
         """
         An application-specific intance of
-        :py:class:`twilio.rest.TwilioRestClient`. Primarily for internal use.
+        :py:class:`twilio.rest.Client`. Primarily for internal use.
         """
         ctx = stack.top
         if ctx is not None:
             if not hasattr(ctx, 'twilio_client'):
-                ctx.twilio_client = TwilioRestClient(
+                ctx.twilio_client = Client(
                     current_app.config['TWILIO_ACCOUNT_SID'],
                     current_app.config['TWILIO_AUTH_TOKEN'])
             return ctx.twilio_client
@@ -91,7 +91,7 @@ class Twilio(object):
     def validator(self):
         """
         An application-specific instance of
-        :py:class:`twilio.util.RequestValidator`. Primarily for internal use.
+        :py:class:`twilio.request_validator.RequestValidator`. Primarily for internal use.
         """
         ctx = stack.top
         if ctx is not None:

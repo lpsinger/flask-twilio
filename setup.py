@@ -25,7 +25,7 @@ setup(
         'itsdangerous',
         'Flask',
         'six',
-        'twilio'
+        'twilio >= 6.0.0'
     ],
     setup_requires=[
         'pytest-runner',
