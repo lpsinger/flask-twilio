@@ -19,7 +19,7 @@ Set Up
 Flask-Twilio can be initialized by first creating the application and then creating the :py:class:`Twilio` instance::
 
     from flask import Flask
-    from flask.ext.twilio import Twilio
+    from flask_twilio import Twilio
 
     app = Flask(__name__)
     twilio = Twilio(app)
@@ -39,7 +39,7 @@ Making a call involves two steps: first, creating a call view, and second,
 placing a call. The view produces an XML file that serves as a script for
 Twilio to follow. Here is an example call view::
 
-    from flask.ext.twilio import Response
+    from flask_twilio import Response
 
     @app.route('/call.xml')
     @twilio.twiml
@@ -90,4 +90,4 @@ Flask-Twilio understands the following configuration values:
 API
 ---
 
-.. automodule:: flask.ext.twilio
+.. automodule:: flask_twilio

@@ -4,7 +4,7 @@ import pytest
 from flask import Flask
 from twilio.request_validator import RequestValidator
 from twilio.rest.api.v2010.account.call import CallList
-from flask.ext.twilio import Twilio, Response
+from flask_twilio import Twilio, Response
 from twilio.twiml.voice_response import Say
 
 

@@ -6,7 +6,7 @@ Demo Flask-Twilio application
 # Imports.
 import os
 from flask import flash, Flask, render_template, request, url_for
-from flask.ext.twilio import Twilio, Response
+from flask_twilio import Twilio, Response
 from twilio.rest.exceptions import TwilioRestException
 from jinja2 import DictLoader
 

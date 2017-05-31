@@ -22,7 +22,7 @@ import shlex
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 sys.path.append(os.path.abspath('_themes'))
 
-from flask.ext.twilio import __version__
+from flask_twilio import __version__
 
 # -- General configuration ------------------------------------------------
 
