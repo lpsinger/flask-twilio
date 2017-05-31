@@ -24,7 +24,7 @@ Flask-Twilio can be initialized by first creating the application and then creat
     app = Flask(__name__)
     twilio = Twilio(app)
 
-or using the factory method approach, creating the applicatoin first, then the
+or using the factory method approach, creating the application first, then the
 :py:class:`Twilio` instance, and finally calling :py:meth:`Twilio.init_app`::
 
     twilio = Twilio()
