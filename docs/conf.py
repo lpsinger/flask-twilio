@@ -313,5 +313,4 @@ texinfo_documents = [
 intersphinx_mapping = {'http://docs.python.org/': None,
                        'http://flask.pocoo.org/docs/': None,
                        'http://werkzeug.pocoo.org/docs/latest/': None,
-                       'https://twilio-python.readthedocs.org/en/latest/': None,
                        'http://pythonhosted.org/itsdangerous/': None}
