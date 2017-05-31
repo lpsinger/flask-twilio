@@ -9,7 +9,8 @@ from twilio.twiml.voice_response import Say
 
 
 def basic_auth(username, password):
-    return {'Authorization': 'Basic ' + b64encode((username + ':' + password).encode()).decode()}
+    auth = 'Basic ' + b64encode((username + ':' + password).encode()).decode()
+    return {'Authorization': auth}
 
 
 @pytest.fixture
@@ -45,10 +46,12 @@ def always_invalid(monkeypatch):
 @pytest.fixture
 def mock_create_call(monkeypatch):
     ret = dict()
+
     def store(self, to, from_, url):
         ret['to'] = to
         ret['from_'] = from_
         ret['url'] = url
+
     monkeypatch.setattr(CallList, 'create', store)
     return ret
 
@@ -59,7 +62,6 @@ def test_get_deined(twilio):
     test_client = app.test_client()
     resp = test_client.get('/call')
     assert resp.status_code == 405
-
 
 
 def test_post_deined(twilio):

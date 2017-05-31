@@ -90,7 +90,8 @@ class Twilio(object):
     def validator(self):
         """
         An application-specific instance of
-        :py:class:`twilio.request_validator.RequestValidator`. Primarily for internal use.
+        :py:class:`twilio.request_validator.RequestValidator`.
+        Primarily for internal use.
         """
         ctx = stack.top
         if ctx is not None:
@@ -141,8 +142,8 @@ class Twilio(object):
                         self.signer.validate(auth.password, max_age=600))
                     if not authorized:
                         # If authorization failed, then issue a challenge.
-                        return 'Unauthorized', 401, {'WWW-Authenticate':
-                            'Basic realm="Login Required"'}
+                        return 'Unauthorized', 401, {
+                            'WWW-Authenticate': 'Basic realm="Login Required"'}
                 # Validate the Twilio request. This guarantees that the request
                 # came from Twilio, rather than some other malicious agent.
                 valid = self.validator.validate(

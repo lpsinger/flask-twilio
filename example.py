@@ -63,6 +63,7 @@ app.jinja_loader = DictLoader({'example.html': '''\
 </div>
 '''})
 
+
 @app.route('/twiml')
 @twilio.twiml
 def test_call():
@@ -70,9 +71,12 @@ def test_call():
     say = int(request.values.get('say', 1))
     sms = int(request.values.get('sms', 1))
     resp = Response()
-    if say: resp.say('This is a voice call from Twilio!', voice='female')
-    if sms: resp.sms('This is an SMS message from Twilio!')
+    if say:
+        resp.say('This is a voice call from Twilio!', voice='female')
+    if sms:
+        resp.sms('This is an SMS message from Twilio!')
     return resp
+
 
 @app.route('/', methods=['GET'])
 def index_get():
@@ -80,6 +84,7 @@ def index_get():
     return render_template(
         'example.html',
         to=request.values.get('to', DEFAULT_NUMBER))
+
 
 @app.route('/', methods=['POST'])
 def index_post():
@@ -96,6 +101,7 @@ def index_post():
     except TwilioRestException as e:
         flash('Failed to make call: ' + e.msg, 'danger')
     return index_get()
+
 
 # Start application.
 app.run('0.0.0.0')
