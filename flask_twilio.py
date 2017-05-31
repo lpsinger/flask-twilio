@@ -4,7 +4,6 @@ __all__ = ('Response', 'Twilio')
 from string import ascii_letters, digits
 from random import SystemRandom
 from functools import wraps
-from os import urandom
 from six.moves.urllib.parse import urlsplit, urlunsplit
 from twilio.rest import Client
 from twilio.request_validator import RequestValidator
