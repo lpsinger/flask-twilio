@@ -16,7 +16,8 @@ or alternatively if you have pip installed::
 Set Up
 ------
 
-Flask-Twilio can be initialized by first creating the application and then creating the :py:class:`Twilio` instance::
+Flask-Twilio can be initialized by first creating the application and then
+creating the :py:class:`flask_twilio.Twilio` instance::
 
     from flask import Flask
     from flask_twilio import Twilio
@@ -25,7 +26,8 @@ Flask-Twilio can be initialized by first creating the application and then creat
     twilio = Twilio(app)
 
 or using the factory method approach, creating the application first, then the
-:py:class:`Twilio` instance, and finally calling :py:meth:`Twilio.init_app`::
+:py:class:`flask_twilio.Twilio` instance, and finally calling
+:py:meth:`flask_twilio.Twilio.init_app`::
 
     twilio = Twilio()
     app = Flask(__name__)
@@ -49,11 +51,12 @@ Twilio to follow. Here is an example call view::
         resp.sms('This is an SMS message from Twilio!')
         return resp
 
-The :py:attr:`Twilio.twiml` decorator adds some validation and must come
+The :py:attr:`flask_twilio.Twilio.twiml` decorator adds some validation and must come
 `after` the ``app.route`` decorator.
 
-To place a call using this view, we use the :py:meth:`Twilio.call_for` method,
-which is based on :py:func:`flask.url_for`::
+To place a call using this view, we use the
+:py:meth:`flask_twilio.Twilio.call_for` method, which is based on
+:py:func:`flask.url_for`::
 
     twilio.call_for('call', to='+15005550006')
 
