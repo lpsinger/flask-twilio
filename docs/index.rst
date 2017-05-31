@@ -6,11 +6,11 @@ Flask-Twilio Installation
 
 Install the extension with one of the following commands::
 
-    $ easy_install Flask-Cache
+    $ easy_install Flask-Twilio
 
 or alternatively if you have pip installed::
 
-    $ pip install Flask-Cache
+    $ pip install Flask-Twilio
 
 
 Set Up
