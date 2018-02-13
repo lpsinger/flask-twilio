@@ -4,9 +4,16 @@ Flask-Twilio
 
 Make Twilio voice/SMS calls with Flask
 """
+import sys
+
 from setuptools import setup
 exec(open('flask_twilio.py').readline())
 
+setup_requires = []
+if {'pytest', 'test', 'ptr'}.intersection(sys.argv):
+    setup_requires.append('pytest-runner')
+if {'build_sphinx'}.intersection(sys.argv):
+    setup_requires.extend(['sphinx', 'flask-sphinx-themes'])
 
 setup(
     name='Flask-Twilio',
@@ -27,9 +34,7 @@ setup(
         'six',
         'twilio >= 6.0.0'
     ],
-    setup_requires=[
-        'pytest-runner',
-    ],
+    setup_requires=setup_requires,
     tests_require=[
         'pytest',
     ],
