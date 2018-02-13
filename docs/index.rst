@@ -4,11 +4,7 @@ Flask-Twilio Documentation
 Flask-Twilio Installation
 -------------------------
 
-Install the extension with one of the following commands::
-
-    $ easy_install Flask-Twilio
-
-or alternatively if you have pip installed::
+Install the extension by running pip:
 
     $ pip install Flask-Twilio
 
