@@ -121,8 +121,9 @@ class Twilio(object):
         """Decorator for marking view that will create TwiML documents."""
         @wraps(view_func)
         def wrapper(*args, **kwargs):
-            # If we are not in testing mode, then enforce rudimentary security.
-            if not current_app.testing:
+            # If we are not in debug or testing mode,
+            # then enforce rudimentary security.
+            if not (current_app.debug or current_app.testing):
                 # Perform HTTP Basic authentication if a secret key is set.
                 #
                 # The username must be `twilio`, and the password must be a
@@ -190,10 +191,11 @@ class Twilio(object):
         # Construct URL for endpoint.
         url = url_for(endpoint, **values)
 
-        # If we are not in testing mode and a secret key is set, then add HTTP
-        # basic auth information to the URL. The username is `twilio`. The
-        # password is a random string that has been signed with `itsdangerous`.
-        if not current_app.testing and self.signer is not None:
+        # If we are not in debug or testing mode and a secret key is set, then
+        # add HTTP basic auth information to the URL. The username is `twilio`.
+        # The password is a random string that has been signed with
+        # `itsdangerous`.
+        if not(current_app.debug or current_app.testing or self.signer is None):
             urlparts = list(urlsplit(url))
             token = ''.join(rand.choice(letters_and_digits) for i in range(32))
             password = self.signer.sign(token).decode()
