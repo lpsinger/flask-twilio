@@ -56,7 +56,7 @@ def mock_create_call(monkeypatch):
     return ret
 
 
-def test_get_deined(twilio):
+def test_get_denied(twilio):
     """Check that GET requests are denied."""
     app = twilio.app
     test_client = app.test_client()
@@ -64,7 +64,7 @@ def test_get_deined(twilio):
     assert resp.status_code == 405
 
 
-def test_post_deined(twilio):
+def test_post_denied(twilio):
     """Check that POST requests are denied if they do not carry a valid Twilio
     signature."""
     app = twilio.app
