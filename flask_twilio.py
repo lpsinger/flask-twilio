@@ -121,12 +121,9 @@ class Twilio(object):
         """Decorator for marking view that will create TwiML documents."""
         @wraps(view_func)
         def wrapper(*args, **kwargs):
-            if current_app.debug or current_app.testing:
-                # Accept the GET method for easier in-browser inspection.
-                wrapper.methods = ('GET', 'POST')
-            else:
-                # Only accept the POST method. Twilio makes POST requests.
-                wrapper.methods = ('POST',)
+            if not(current_app.debug or current_app.testing):
+                if request.method != 'POST':
+                    abort(405)
 
                 # Perform HTTP Basic authentication if a secret key is set.
                 #
@@ -164,6 +161,7 @@ class Twilio(object):
             resp = make_response(rv)
             resp.mimetype = 'text/xml'
             return resp
+        wrapper.methods = ('GET', 'POST')
         # Done!
         return wrapper
 
