@@ -32,7 +32,7 @@ setup(
         'itsdangerous',
         'flask>=0.9',
         'six',
-        'twilio >= 6.0.0'
+        'twilio>=6.0.0'
     ],
     setup_requires=setup_requires,
     tests_require=[
