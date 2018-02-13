@@ -18,7 +18,7 @@ if {'build_sphinx'}.intersection(sys.argv):
 setup(
     name='Flask-Twilio',
     version=__version__,
-    url='http://flask-twilio.readthedocs.io',
+    url='https://github.com/lpsinger/flask-twilio',
     license='BSD',
     author='Leo Singer',
     author_email='leo.singer@ligo.org',
