@@ -7,7 +7,7 @@ Demo Flask-Twilio application
 import os
 from flask import flash, Flask, render_template, request
 from flask_twilio import Twilio, Response
-from twilio.rest.exceptions import TwilioRestException
+from twilio.base.exceptions import TwilioRestException
 from jinja2 import DictLoader
 
 # A standard test number.
