@@ -30,7 +30,7 @@ setup(
     platforms='any',
     install_requires=[
         'itsdangerous',
-        'Flask',
+        'flask>=0.9',
         'six',
         'twilio >= 6.0.0'
     ],

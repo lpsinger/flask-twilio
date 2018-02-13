@@ -10,16 +10,8 @@ from twilio.request_validator import RequestValidator
 from twilio.twiml import TwiML
 from flask import Response as FlaskResponse
 from flask import abort, current_app, make_response, request, url_for
+from flask import _app_ctx_stack as stack
 from itsdangerous import TimestampSigner
-
-
-# Find the stack on which we want to store the database connection.
-# Starting with Flask 0.9, the _app_ctx_stack is the correct one,
-# before that we need to use the _request_ctx_stack.
-try:
-    from flask import _app_ctx_stack as stack
-except ImportError:
-    from flask import _request_ctx_stack as stack
 
 
 rand = SystemRandom()
@@ -56,12 +48,7 @@ class Twilio(object):
 
     def init_app(self, app):
         """Factory method."""
-        # Use the newstyle teardown_appcontext if it's available,
-        # otherwise fall back to the request context
-        if hasattr(app, 'teardown_appcontext'):
-            app.teardown_appcontext(self.teardown)
-        else:
-            app.teardown_request(self.teardown)
+        app.teardown_appcontext(self.teardown)
 
     def teardown(self, exception):
         ctx = stack.top
