@@ -31,7 +31,7 @@ or using the factory method approach, creating the application first, then the
 
 
 Making a Call
----------------
+-------------
 
 Making a call involves two steps: first, creating a call view, and second,
 placing a call. The view produces an XML file that serves as a script for
