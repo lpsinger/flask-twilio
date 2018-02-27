@@ -190,7 +190,7 @@ class Twilio(object):
             url = urlunsplit(urlparts)
 
         # Issue phone call.
-        return self.client.calls.create(to, from_, url)
+        return self.client.calls.create(to=to, from_=from_, url=url)
 
     def message(self, body, to, **values):
         """
