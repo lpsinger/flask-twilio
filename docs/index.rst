@@ -68,6 +68,14 @@ If you only want to send a text message, there is a shortcut::
     twilio.message('This is an SMS message from Twilio!', to='+15005550006')
 
 
+Full Example Flask Application
+------------------------------
+
+See `example.py on GitHub`_ for a full example Flask application.
+
+.. _example.py on GitHub: https://github.com/lpsinger/flask-twilio/blob/master/example.py
+
+
 Configuration Variables
 -----------------------
 
