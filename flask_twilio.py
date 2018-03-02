@@ -68,9 +68,16 @@ class Twilio(object):
         ctx = stack.top
         if ctx is not None:
             if not hasattr(ctx, 'twilio_client'):
+                username = current_app.config.get('TWILIO_AUTH_SID')
+                account_sid = current_app.config.get('TWILIO_ACCOUNT_SID')
+                if username is None:
+                    username = account_sid
+                elif account_sid is None:
+                    account_sid = username
+                password = current_app.config['TWILIO_AUTH_TOKEN']
                 ctx.twilio_client = Client(
-                    current_app.config['TWILIO_ACCOUNT_SID'],
-                    current_app.config['TWILIO_AUTH_TOKEN'])
+                    username=username, password=password,
+                    account_sid=account_sid)
             return ctx.twilio_client
 
     @property

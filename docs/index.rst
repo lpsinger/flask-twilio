@@ -73,7 +73,10 @@ Flask-Twilio understands the following configuration values:
 
 =========================== ====================================================
 ``TWILIO_ACCOUNT_SID``      Your Twilio account SID.
-``TWILIO_AUTH_TOKEN``       Your Twilio account's authentication token.
+``TWILIO_AUTH_SID``         The SID that you use to authenticate with Twilio,
+                            if different from your account SID (for example, if
+                            you are using an `API key`_).
+``TWILIO_AUTH_TOKEN``       Your Twilio authentication token.
 ``TWILIO_FROM``             Your default 'from' phone number (optional).
                             Note that there are some useful
                             `dummy numbers for testing`_.
@@ -84,6 +87,7 @@ Flask-Twilio understands the following configuration values:
 =========================== ====================================================
 
 .. _dummy numbers for testing: https://www.twilio.com/docs/api/rest/test-credentials#test-sms-messages-parameters-From
+.. _api key: https://www.twilio.com/docs/api/rest/keys
 
 
 API

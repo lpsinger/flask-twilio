@@ -21,8 +21,9 @@ DEFAULT_NUMBER = '+15005550006'
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.urandom(24)
 app.config['SERVER_NAME'] = socket.getfqdn() + ':5000'
-app.config['TWILIO_ACCOUNT_SID'] = os.environ['TWILIO_ACCOUNT_SID']
-app.config['TWILIO_AUTH_TOKEN'] = os.environ['TWILIO_AUTH_TOKEN']
+app.config['TWILIO_ACCOUNT_SID'] = os.environ.get('TWILIO_ACCOUNT_SID')
+app.config['TWILIO_AUTH_SID'] = os.environ.get('TWILIO_AUTH_SID')
+app.config['TWILIO_AUTH_TOKEN'] = os.environ.get('TWILIO_AUTH_TOKEN')
 app.config['TWILIO_FROM'] = os.environ.get('TWILIO_FROM', DEFAULT_NUMBER)
 twilio = Twilio(app)
 
