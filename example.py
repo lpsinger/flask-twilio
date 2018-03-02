@@ -30,41 +30,51 @@ twilio = Twilio(app)
 app.jinja_loader = DictLoader({'example.html': '''\
 <!doctype html>
 <title>Flask-Twilio Test</title>
-<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-<br>
-<div class=container>
-    <div class=jumbotron>
-        <h2>Flask-Twilio Test</h2>
-    </div>
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% for category, message in messages %}
-            <div class="alert alert-{{ category }}">{{ message }}</div>
-        {% endfor %}
-    {% endwith %}
-    <form method=post>
-        <div class=input-group>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<style>
+.vertical-container {
+    min-height: 100%;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+}
+</style>
+<div class=vertical-container>
+    <div class=container>
+        <div class=jumbotron>
+            <h2>Flask-Twilio Test</h2>
+        </div>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endwith %}
+        <form method=post>
             <input type=hidden id=say name=say value=1>
             <input type=hidden id=sms name=sms value=1>
-            <input autofocus class=form-control type=tel name=to value="{{ to }}">
-            <div class=input-group-btn>
-                <button class="btn btn-default" type=submit>
-                    Say + SMS
-                </button>
-                <button type=button class="btn btn-default dropdown-toggle" data-toggle=dropdown aria-haspopup=true aria-expanded=false>
-                    <span class=caret></span>
-                </button>
-                <ul class="dropdown-menu dropdown-menu-right">
-                    <li><a href="#" onclick="$('form').submit();">Say + SMS</a></li>
-                    <li><a href="#" onclick="$('#sms').val(0); $('form').submit();">Say only</a></li>
-                    <li><a href="#" onclick="$('#say').val(0); $('form').submit();">SMS only</a></li>
-                </ul>
+            <div class=input-group>
+                <input autofocus class=form-control type=tel name=to value="{{ to }}">
+                <div class=input-group-append>
+                    <button class="btn btn-outline-primary" type=submit>
+                        Say + SMS
+                    </button>
+                    <button type=button class="btn btn-outline-primary dropdown-toggle" data-toggle=dropdown aria-haspopup=true aria-expanded=false>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <a class=dropdown-item href="#" onclick="$('form').submit();">Say + SMS</a></li>
+                        <a class=dropdown-item href="#" onclick="$('#sms').val(0); $('form').submit();">Say only</a></li>
+                        <a class=dropdown-item href="#" onclick="$('#say').val(0); $('form').submit();">SMS only</a></li>
+                    </div>
+                </div>
             </div>
-        </div>
-    </form>
+        </form>
+    </div>
 </div>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 '''})
 
 
