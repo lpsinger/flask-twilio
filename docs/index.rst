@@ -38,13 +38,15 @@ placing a call. The view produces an XML file that serves as a script for
 Twilio to follow. Here is an example call view::
 
     from flask_twilio import Response
+    from twilio.twiml.messaging_response import Message
+    from twilio.twiml.voice_response import Say
 
     @app.route('/call.xml')
     @twilio.twiml
     def call():
         resp = Response()
-        resp.say('This is a voice call from Twilio!', voice='female')
-        resp.sms('This is an SMS message from Twilio!')
+        resp.append(Say('This is a voice call from Twilio!', voice='female'))
+        resp.append(Message('This is an SMS message from Twilio!'))
         return resp
 
 The :py:attr:`flask_twilio.Twilio.twiml` decorator adds some validation and must come
