@@ -3,11 +3,14 @@
 Demo Flask-Twilio application
 """
 
-# Imports.
 import os
+import socket
+
 from flask import flash, Flask, render_template, request
 from flask_twilio import Twilio, Response
 from twilio.base.exceptions import TwilioRestException
+from twilio.twiml.messaging_response import Message
+from twilio.twiml.voice_response import Say
 from jinja2 import DictLoader
 
 # A standard test number.
@@ -17,6 +20,7 @@ DEFAULT_NUMBER = '+15005550006'
 # Application configuration.
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.urandom(24)
+app.config['SERVER_NAME'] = socket.getfqdn() + ':5000'
 app.config['TWILIO_ACCOUNT_SID'] = os.environ['TWILIO_ACCOUNT_SID']
 app.config['TWILIO_AUTH_TOKEN'] = os.environ['TWILIO_AUTH_TOKEN']
 app.config['TWILIO_FROM'] = os.environ.get('TWILIO_FROM', DEFAULT_NUMBER)
@@ -72,9 +76,9 @@ def test_call():
     sms = int(request.values.get('sms', 1))
     resp = Response()
     if say:
-        resp.say('This is a voice call from Twilio!', voice='female')
+        resp.append(Say('This is a voice call from Twilio!', voice='female'))
     if sms:
-        resp.sms('This is an SMS message from Twilio!')
+        resp.append(Message('This is an SMS message from Twilio!'))
     return resp
 
 
@@ -100,6 +104,7 @@ def index_post():
         flash('Request was successfully sent to Twilio.', 'success')
     except TwilioRestException as e:
         flash('Failed to make call: ' + e.msg, 'danger')
+        app.logger.exception('Failed to make call')
     return index_get()
 
 
